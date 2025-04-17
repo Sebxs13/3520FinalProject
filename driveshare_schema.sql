@@ -14,7 +14,7 @@ USE driveshare;
 
 -- table structure for table 'User'
 CREATE TABLE IF NOT EXISTS User (
-	userId INT PRIMARY KEY AUTO_INCREMENT,
+	userId SMALLINT PRIMARY KEY AUTO_INCREMENT,
 	firstName VARCHAR(20) NOT NULL,
 	lastName VARCHAR(50) NOT NULL,
 	email VARCHAR(320) UNIQUE NOT NULL,
@@ -26,8 +26,9 @@ CREATE TABLE IF NOT EXISTS User (
 -- table structure for table 'Passenger'
 
 CREATE TABLE IF NOT EXISTS Passenger(
-	passengerId INT PRIMARY KEY AUTO_INCREMENT,
-	rating DECIMAL(2,1) CHECK (rating BETWEEN 0 AND 5)
+	passengerId SMALLINT PRIMARY KEY AUTO_INCREMENT,
+	rating DECIMAL(2,1) CHECK (rating BETWEEN 0 AND 5),
+    userId SMALLINT NOT NULL,
 	FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE
 );
 
@@ -35,33 +36,69 @@ CREATE TABLE IF NOT EXISTS Passenger(
 -- table structure for table 'Driver'
 
 CREATE TABLE IF NOT EXISTS Driver (
-	driverId INT PRIMARY KEY AUTO_INCREMENT,
+	driverId SMALLINT AUTO_INCREMENT,
 	licenseNumber VARCHAR(50) UNIQUE NOT NULL,
-	vehicleType VARCHAR(50) NOT NULL,
+	vehicleType ENUM('sedan', 'suv', 'van'),
 	rating DECIMAL(2,1) CHECK (rating BETWEEN 0 AND 5) NOT NULL,
-	FOREIGN KEY userId REFERENCES User(userId) on DELETE CASCADE
+    userId SMALLINT NOT NULL,
+    PRIMARY KEY (driverId),
+	FOREIGN KEY (userId) REFERENCES User(userId) on DELETE CASCADE
 );
 
 
 -- table structure for table 'Booking'
 
 CREATE TABLE IF	NOT EXISTS Booking(
-	bookingId INT PRIMARY KEY AUTO_INCREMENT,
-	driverId INT,
-	userId INT,
-	rideId INT,
+	bookingId SMALLINT PRIMARY KEY AUTO_INCREMENT,
+	driverId SMALLINT NOT NULL,
+	userId SMALLINT NOT NULL,
+	rideId SMALLINT NOT NULL,
 	seatCount INT NOT NULL CHECK (seatCount > 0),
-	FOREIGN KEY (driverId) REFERENCES Driver(userId) ON DELETE CASCADE,
-	FOREIGN KEY (userId) REFERENCES Passenger(userId) ON DELETE CASCADE
+	FOREIGN KEY (driverId) REFERENCES Driver(driverId) ON DELETE CASCADE,
+	FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE
 );
 
 
 -- table structure for table 'Notification'
 
 CREATE TABLE IF NOT EXISTS Notification (
-	notificationId INT PRIMARY KEY AUTO_INCREMENT,
-	userId INT,
+	notificationId SMALLINT PRIMARY KEY AUTO_INCREMENT,
+	userId SMALLINT,
 	message VARCHAR(1000),
 	stampTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE
+);
+
+-- table structure for table 'Payment'
+CREATE TABLE IF NOT EXISTS Payment (
+	paymentId SMALLINT AUTO_INCREMENT PRIMARY KEY,
+    amount DECIMAL(10,2),
+    transactionDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('completed', 'failed'),
+    bookingId SMALLINT NOT NULL,
+    FOREIGN KEY (bookingId) REFERENCES Booking(bookingId)
+);
+
+-- table structure for table 'Ride'
+CREATE TABLE IF NOT EXISTS Ride (
+	rideId SMALLINT AUTO_INCREMENT NOT NULL,
+    bookingId SMALLINT NOT NULL UNIQUE,
+    startLocation VARCHAR(255),
+    endLocation VARCHAR(255),
+    distance_m DECIMAL(10,2),
+    price DECIMAL(10,2),
+    pickupTime DATETIME,
+    dropoffTime DATETIME,
+    status ENUM('requested', 'accepted', 'in_progress', 'completed', 'canceled'),
+    PRIMARY KEY (rideId),
+    FOREIGN KEY (bookingId) REFERENCES Booking(bookingId) ON DELETE CASCADE
+);
+
+-- table structure for table 'Tracking'
+CREATE TABLE IF NOT EXISTS Tracking(
+	trackingId SMALLINT AUTO_INCREMENT PRIMARY KEY,
+    rideId SMALLINT NOT NULL,
+    driverLocation VARCHAR(255), -- e.g. "Downtown Salt Lake", "University Pkwy & State St"
+    eta DATETIME,
+    FOREIGN KEY (rideId) REFERENCES Ride(rideId)
 );
