@@ -1,6 +1,5 @@
 
 -- we will use this file to load data into the DriveShare database
-SELECT NOW();
 
 INSERT INTO User (firstName, lastName, email, phoneNumber, userType) VALUES
 ('Gertrude', 'Rich', 'grich@gmail.com', '801-411-0095', 'Passenger'),
@@ -51,7 +50,7 @@ INSERT INTO RidePreference (userId, prefersQuietRide, allowsPets, prefersMusic) 
 (3, FALSE, TRUE, FALSE);
 
 INSERT INTO Message (senderId, receiverId, content, rideId) VALUES
-(1, 2, 'Hi, I'm ready at the pickup spot.', 1),
+(1, 2, "Hi, I'm ready at the pickup spot.", 1),
 (3, 2, 'Thanks for the ride!', 2);
 
 INSERT INTO LoginHistory (userId, ipAddress, deviceInfo) VALUES

@@ -52,7 +52,6 @@ CREATE TABLE IF	NOT EXISTS Booking(
 	bookingId SMALLINT PRIMARY KEY AUTO_INCREMENT,
 	driverId SMALLINT NOT NULL,
 	userId SMALLINT NOT NULL,
-	rideId SMALLINT NOT NULL,
 	seatCount INT NOT NULL CHECK (seatCount > 0),
 	FOREIGN KEY (driverId) REFERENCES Driver(driverId) ON DELETE CASCADE,
 	FOREIGN KEY (userId) REFERENCES User(userId) ON DELETE CASCADE
@@ -100,6 +99,7 @@ CREATE TABLE IF NOT EXISTS Tracking(
     rideId SMALLINT NOT NULL,
     driverLocation VARCHAR(255), -- e.g. "Downtown Salt Lake", "University Pkwy & State St"
     eta DATETIME,
+    CHECK (eta >= CURRENT_TIMESTAMP),
     FOREIGN KEY (rideId) REFERENCES Ride(rideId)
 );
 
