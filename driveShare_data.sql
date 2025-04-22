@@ -14,9 +14,9 @@ INSERT INTO Passenger (rating, userId) VALUES
 INSERT INTO Driver (licenseNumber, vehicleType, rating, userId) VALUES
 ('3CDC1', 'suv', 4.9, 2);
 
-INSERT INTO Booking (driverId, userId, rideId, seatCount) VALUES
-(1, 1, 1, 2),
-(1, 3, 2, 1);
+INSERT INTO Booking (driverId, userId, seatCount) VALUES
+(1, 1, 2),
+(1, 3, 1);
 
 INSERT INTO Notification (userId, message) VALUES
 (1, 'Your ride has been confirmed.'),
