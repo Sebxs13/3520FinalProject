@@ -8,6 +8,8 @@ This file contains the schema model for DriveShare application.
 
 */
 
+-- CREATE TABLES --
+
 DROP DATABASE IF EXISTS driveshare;
 CREATE DATABASE driveshare;
 USE driveshare;

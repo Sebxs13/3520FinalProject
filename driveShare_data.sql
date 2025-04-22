@@ -1,6 +1,8 @@
 
 -- we will use this file to load data into the DriveShare database
 
+-- DATA POPULATION--
+
 INSERT INTO User (firstName, lastName, email, phoneNumber, userType) VALUES
 ('Gertrude', 'Rich', 'grich@gmail.com', '801-411-0095', 'Passenger'),
 ('Donna', 'Johnson', 'donnafjohnson@outlook.com', '623-011-3129', 'Driver'),
